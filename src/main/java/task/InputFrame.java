@@ -131,7 +131,11 @@ public class InputFrame extends JFrame {
 
     public void saveComment(String comentario, String proyecto) {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-        File f = new File("registro" + df.format(new Date()) + ".csv");
+        File logs=new File("registro");
+        if(!logs.exists()){
+            logs.mkdir();
+        }
+        File f = new File("registro/log" + df.format(new Date()) + ".csv");
         try {
             TimeZone.setDefault(new SimpleTimeZone(-18000000, "Mexico/General"));
 

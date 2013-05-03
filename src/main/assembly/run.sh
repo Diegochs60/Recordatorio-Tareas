@@ -1,0 +1,1 @@
+java -jar recordatorios-1.0-SNAPSHOT.jar

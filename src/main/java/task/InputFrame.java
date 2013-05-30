@@ -1,19 +1,17 @@
 package task;
 
 import java.awt.AWTException;
-import java.awt.CheckboxMenuItem;
+import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.Menu;
 import java.awt.MenuItem;
+import java.awt.Panel;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
@@ -34,7 +32,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 public class InputFrame extends JFrame {
 
@@ -44,6 +41,7 @@ public class InputFrame extends JFrame {
     private static final long serialVersionUID = -7292098804316941558L;
     private JTextField texto = new JTextField();
     private JTextField proyecto = new JTextField();
+    private JTextField horas = new JTextField();
     private TrayIcon trayIcon;
     private SystemTray tray;
     private InputFrame inputFrame;
@@ -52,7 +50,9 @@ public class InputFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new FlowLayout());
         setTitle("Registro de Horas");
-        setLocation(300, 300);
+        setLocation(200, 300);
+        
+        
         
 //        SwingUtilities.invokeLater(new Runnable() {
 //            public void run() {
@@ -63,43 +63,24 @@ public class InputFrame extends JFrame {
         add(new JLabel("¿Qué estás haciendo?"));
         inputFrame = this;
         texto.setColumns(30);
-        texto.addKeyListener(new KeyAdapter() {
-            public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() == 27) {
-                    inputFrame.setVisible(false);
-                }
-                if (e.getKeyChar() == 10) {
-                    if (texto.getText() != null && !"".equals(texto.getText().trim())) {
-                        saveComment(texto.getText(), proyecto.getText());
-                    }
-                    inputFrame.setVisible(false);
-                }
-            }
-        });
+        texto.addKeyListener(new EnterKeyAdapter(texto.getText()));
         add(texto);
 
         add(new JLabel("Proyecto"));
         proyecto.setColumns(20);
-        proyecto.addKeyListener(new KeyAdapter() {
-            public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() == 27) {
-                    inputFrame.setVisible(false);
-                }
-                if (e.getKeyChar() == 10) {
-                    if (proyecto.getText() != null && !"".equals(proyecto.getText().trim())) {
-                        saveComment(texto.getText(), proyecto.getText());
-                    }
-                    inputFrame.setVisible(false);
-                }
-            }
-        });
+        proyecto.addKeyListener(new EnterKeyAdapter(proyecto.getText()));
         add(proyecto);
+        
+        add(new JLabel("Horas"));
+        horas.setColumns(5);
+        horas.addKeyListener(new EnterKeyAdapter(horas.getText()));
+        add(horas);
 
         JButton boton = new JButton("Guardar");
         boton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (texto.getText() != null && !"".equals(texto.getText().trim())) {
-                    saveComment(texto.getText(), proyecto.getText());
+                    saveComment();
                      
                 }
                 inputFrame.setVisible(false);
@@ -129,7 +110,7 @@ public class InputFrame extends JFrame {
         TriggerThread.setDisplay(true);
     }
 
-    public void saveComment(String comentario, String proyecto) {
+    public void saveComment() {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         File logs=new File("registro");
         if(!logs.exists()){
@@ -143,8 +124,9 @@ public class InputFrame extends JFrame {
             FileWriter fw = new FileWriter(f, true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, new Locale("es", "MX")).format(new Date())
-                    + "," + comentario
-                    + "," + proyecto + "\r\n");
+                    + "," + texto.getText()
+                    + "," + proyecto.getText() 
+                    + "," + horas.getText() + "\r\n");
             bw.flush();
             bw.close();
             fw.close();
@@ -215,35 +197,6 @@ public class InputFrame extends JFrame {
         });
         
         
-//        ActionListener listener = new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                MenuItem item = (MenuItem)e.getSource();
-//                //TrayIcon.MessageType type = null;
-//                System.out.println(item.getLabel());
-//                if ("Error".equals(item.getLabel())) {
-//                    //type = TrayIcon.MessageType.ERROR;
-//                    trayIcon.displayMessage("Sun TrayIcon Demo",
-//                            "This is an error message", TrayIcon.MessageType.ERROR);
-//                    
-//                } else if ("Warning".equals(item.getLabel())) {
-//                    //type = TrayIcon.MessageType.WARNING;
-//                    trayIcon.displayMessage("Sun TrayIcon Demo",
-//                            "This is a warning message", TrayIcon.MessageType.WARNING);
-//                    
-//                } else if ("Info".equals(item.getLabel())) {
-//                    //type = TrayIcon.MessageType.INFO;
-//                    trayIcon.displayMessage("Sun TrayIcon Demo",
-//                            "This is an info message", TrayIcon.MessageType.INFO);
-//                    
-//                } else if ("None".equals(item.getLabel())) {
-//                    //type = TrayIcon.MessageType.NONE;
-//                    trayIcon.displayMessage("Sun TrayIcon Demo",
-//                            "This is an ordinary message", TrayIcon.MessageType.NONE);
-//                }
-//            }
-//        };
-        
-        
         exitItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                salir();
@@ -267,4 +220,22 @@ public class InputFrame extends JFrame {
             return (new ImageIcon(imageURL, description)).getImage();
         }
     }
+
+        private class EnterKeyAdapter extends KeyAdapter{
+            private String text;
+            public EnterKeyAdapter(String txt){
+                text=txt;
+            }
+            public void keyTyped(KeyEvent e) {
+                if (e.getKeyChar() == 27) {
+                    inputFrame.setVisible(false);
+                }
+                if (e.getKeyChar() == 10) {
+                    if (text != null && !"".equals(text.trim())) {
+                        saveComment();
+                    }
+                    inputFrame.setVisible(false);
+                }
+            }
+        }
 }

@@ -1,1 +1,1 @@
-java -jar recordatorios-1.0-SNAPSHOT.jar
+java -cp json-20090211.jar;recordatorios-2.0.jar;. task.Main

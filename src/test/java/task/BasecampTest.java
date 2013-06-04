@@ -10,6 +10,7 @@ import task.basecamp.Account;
 import task.basecamp.BasecampAbstract;
 import org.junit.*;
 import static org.junit.Assert.*;
+import task.basecamp.ProjectDTO;
 import task.basecamp.Projects;
 import task.basecamp.ToDoItems;
 import task.basecamp.ToDoList;
@@ -29,7 +30,7 @@ public class BasecampTest {
         JSONObject resp=acc.getAccountInfo();
         
         assertNotNull(resp);
-        assertNotNull(resp.get("account"));
+        assertNotNull(resp.get("person"));
         
         System.out.println(resp.toString(4));
         
@@ -46,6 +47,16 @@ public class BasecampTest {
         System.out.println(resp.toString(4));        
     }
     
+    @Test
+    public void testProjectsList() throws Exception{ 
+        Projects prj=new Projects();
+        ProjectDTO[] resp=prj.getProjectList();
+        
+        assertNotNull(resp);
+        
+        System.out.println("---------------- testProjectsList"); 
+        System.out.println(resp.length);        
+    }
     @Test
     public void testTodoList() throws Exception{ 
         ToDoList todol=new ToDoList();

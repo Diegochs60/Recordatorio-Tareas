@@ -1,5 +1,6 @@
 package task;
 
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Parameters {
@@ -8,7 +9,7 @@ public class Parameters {
 	
 	private static Parameters instance;
 	private Parameters(){
-		properties=ResourceBundle.getBundle("parameters");		
+		properties=ResourceBundle.getBundle("config");		
 	}
 	public static Parameters getInstance(){
 		if(instance==null){
@@ -16,7 +17,11 @@ public class Parameters {
 		}
 		return instance;
 	}
-	public static String getString(String key){
-		return getInstance().properties.getString(key);
+	public String getString(String key){
+            try{
+                return getInstance().properties.getString(key);
+            }catch(MissingResourceException e){
+                return null;
+            }
 	}
 }

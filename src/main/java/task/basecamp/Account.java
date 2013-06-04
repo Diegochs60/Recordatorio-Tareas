@@ -19,7 +19,7 @@ public class Account extends BasecampAbstract{
     public JSONObject getAccountInfo(){
         try {
             return (data=XML.toJSONObject(getUrl("/me.xml")));
-        } catch (JSONException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Account.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;

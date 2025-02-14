@@ -8,4 +8,4 @@ La aplicación cada hora pide el registro de la tarea, se puede definir el tiemp
 
 
 
-java -jar https://github.com/Diegochs60/Recordatorio-Tareas/releases/download/v1.0/Software.zip [periodo_milisegundos]
+java -jar https://github.com/Diegochs60/Recordatorio-Tareas/releases/download/v2.0/Software.zip [periodo_milisegundos]
